@@ -1,53 +1,38 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../Components/Header';
 import MusicCard from '../Components/MusicCard';
+import MyContext from '../Context/MyContext';
 import { getFavoriteSongs } from '../services/favoriteSongsAPI';
 
-class Favorites extends React.Component {
-  constructor() {
-    super();
+const Favorites = () => {
+  const [favoriteList, setFavoriteList] = useState([]);
+  const { setFavoriteIds } = useContext(MyContext);
 
-    this.state = {
-      favoriteList: [],
-      liked: true,
+  useEffect(() => {
+    const getFavorited = async () => {
+      const favoriteRes = await getFavoriteSongs();
+      setFavoriteList(favoriteRes);
+      setFavoriteIds(() => favoriteRes.map((track) => track.trackId));
     };
-  }
-
-  async componentDidMount() {
-    const favoriteRes = await getFavoriteSongs();
-    this.setState({ favoriteList: favoriteRes });
-  }
-
-  reloadList = (array) => {
-    this.setState({
-      favoriteList: array,
-    });
-  }
-
-  render() {
-    const { favoriteList, liked } = this.state;
-    return (
-      <div data-testid="page-favorites">
-        <Header />
-        {favoriteList.map((music, i) => (
-          <div key={ i }>
-            <Link
-              to={ `/album/${music.collectionId}` }
-            >
-              <img src={ music.artworkUrl100 } alt={ music.collectionName } />
-            </Link>
-            <MusicCard
-              key={ i }
-              track={ music }
-              liked={ liked }
-              reloadList={ this.reloadList }
-            />
-          </div>
-        ))}
-      </div>
-    );
-  }
+    getFavorited();
+  }, []);
+  
+  return (
+    <div data-testid="page-favorites">
+      <Header />
+      {favoriteList.map((music, i) => (
+        <div key={ i }>
+          <Link
+            to={ `/album/${music.collectionId}` }
+          >
+            <img src={ music.artworkUrl100 } alt={ music.collectionName } />
+          </Link>
+          <MusicCard key={ i } track={ music } />
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default Favorites;

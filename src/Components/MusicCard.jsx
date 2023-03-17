@@ -15,10 +15,9 @@ const MusicCard = (props) => {
       setLiked(() => favoriteIds.some((musicId) => musicId === track.trackId));
       return false;
     });
-  }, []);
+  }, [favoriteIds]);
   
   const handleChange = async (target) => {
-    console.log('checked', liked);
     if (target.checked) {
       setLoading(true);
       setLiked(true);
