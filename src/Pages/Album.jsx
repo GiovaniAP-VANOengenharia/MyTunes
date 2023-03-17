@@ -1,61 +1,47 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Header from '../Components/Header';
 import MusicCard from '../Components/MusicCard';
+import MyContext from '../Context/MyContext';
 import { getFavoriteSongs } from '../services/favoriteSongsAPI';
 import getMusics from '../services/musicsAPI';
 
-class Album extends React.Component {
-  constructor() {
-    super();
+const Album = () => {
+  const [collection, setCollection] = useState('');
+  const [collectionImg, setCollectionImg] = useState('');
+  const [artistName, setArtistName] = useState('');
+  const [musicsList, setMusicsList] = useState([]);
+  const { favoriteIds, setFavoriteIds } = useContext(MyContext);
+  const { id } = useParams();
 
-    this.state = {
-      artistName: '',
-      collection: '',
-      collectionImg: '',
-      musicsList: [],
-      favoriteList: [],
+  useEffect(() => {
+    const getTrack = async (musicId) => {
+      const result = await getMusics(musicId);
+      setCollectionImg(result[0].artworkUrl100);
+      setArtistName(result[0].artistName);
+      setCollection(result[0].collectionName);
+      const favoriteRes = await getFavoriteSongs();
+      setFavoriteIds(() => favoriteRes.map((track) => track.trackId));
+      setMusicsList(() => result.filter((track) => result.indexOf(track) && track));
     };
-  }
+    getTrack(id);
+  }, [favoriteIds]);
 
-  async componentDidMount() {
-    const { match: { params: { id } } } = this.props;
-    const result = await getMusics(id);
-    const favoriteRes = await getFavoriteSongs();
-    const trackIds = favoriteRes.map((track) => track.trackId);
-    const image = result[0].artworkUrl100;
-    const musics = result.filter((track) => result.indexOf(track) && track);
-    this.setState({
-      artistName: result[0].artistName,
-      collection: result[0].collectionName,
-      collectionImg: image,
-      musicsList: musics,
-      favoriteList: trackIds,
-    });
-  }
-
-  render() {
-    const { artistName, collection, collectionImg,
-      musicsList, favoriteList } = this.state;
-    return (
-      <div data-testid="page-album">
-        <Header />
-        <img
-          src={ collectionImg }
-          alt={ collection }
-        />
-        <span data-testid="album-name">{ collection }</span>
-        <span data-testid="artist-name">{ artistName }</span>
-        {musicsList.map((music, i) => (
-          <MusicCard
-            key={ i }
-            track={ music }
-            liked={ favoriteList.some((id) => Number(id) === music.trackId) }
-          />
-        ))}
-      </div>
-    );
-  }
+  return (
+    <div data-testid="page-album">
+      <Header />
+      <img
+        src={ collectionImg }
+        alt={ collection }
+      />
+      <span data-testid="album-name">{ collection }</span>
+      <span data-testid="artist-name">{ artistName }</span>
+      {musicsList.map((music, i) => (
+        <MusicCard key={ i } track={ music } />
+      ))}
+    </div>
+  );
 }
 
 Album.propTypes = {
