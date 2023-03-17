@@ -1,51 +1,47 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../Components/Header';
 import { getUser, updateUser } from '../services/userAPI';
 import Loading from './Loading';
 
-class ProfileEdit extends React.Component {
-  state = {
-    isLoading: false,
-    name: '',
-    email: '',
-    description: '',
-    image: '',
-    isSaveButtonDisabled: true,
-  };
+const ProfileEdit = () => {
+  const [loading, setLoading] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState('');
+  const history = useHistory();
 
-  componentDidMount() {
-    this.setState({ isLoading: true }, async () => {
+  useEffect(() => {
+    setLoading(true);
+    const getUserData = async() => {
       const dataUser = await getUser();
-      this.setState({
-        name: dataUser.name,
-        email: dataUser.email,
-        description: dataUser.description,
-        image: dataUser.image,
-        isLoading: false,
-      });
-    });
-  }
+      setName(dataUser.name);
+      setEmail(dataUser.email);
+      setDescription(dataUser.description);
+      setImage(dataUser.image);
+      setLoading(false);
+    }
+    getUserData();
+  }, []);
 
-  validateTextInputs = ({ name, email, description } = this.state) => {
+  useEffect(() => {
     const arrayInputs = [name, email, description, image];
-    return arrayInputs.some((input) => input.length === 0);
-  }
+    setIsDisabled(arrayInputs.some((input) => input.length === 0));
+  }, [name, email, description, image]);
 
-  onInputImage = async (file) => {
-    console.log('Upload Image', file);
-
+  const onInputImage = async (file) => {
+    setImage(file[0].name);
     let fileReader;
     let isCancel = false;
 
     if (file) {
       fileReader = new FileReader();
-      fileReader.onload = (e) => {
-        const { result } = e.target;
-        if (result && !isCancel) {
-          this.setState({ image: result });
-        }
+      fileReader.onload = (file) => {
+        if (file && !isCancel) setImage(file);
       };
       fileReader.readAsDataURL(file);
     }
@@ -58,15 +54,7 @@ class ProfileEdit extends React.Component {
     };
   }
 
-  onInputChange = ({ target }) => {
-    const { name, value } = target;
-    this.setState({ [name]: value }, () => {
-      this.setState({ isSaveButtonDisabled: this.validateTextInputs() });
-    });
-  }
-
-  handleClickSave = async () => {
-    const { name, email, description, image } = this.state;
+  const handleClickSave = async () => {
     const profileEdit = {
       name,
       email,
@@ -74,81 +62,65 @@ class ProfileEdit extends React.Component {
       image,
     };
     await updateUser(profileEdit);
-    const { history } = this.props;
     history.push('/profile');
   }
 
-  render() {
-    const {
-      isLoading,
-      name,
-      email,
-      description,
-      image,
-      isSaveButtonDisabled,
-    } = this.state;
-    return (
-      <div data-testid="page-profile-edit">
-        <Header />
-        <div data-testid="page-profile-edit">
-          Profile
-          <br />
-          {isLoading ? <Loading />
-            : (
-              <form>
+  return (
+    <div data-testid="page-profile-edit">
+      <Header />
+      <ProfileEditContainer data-testid="page-profile-edit">
+        Profile
+        <br />
+        {loading ? <Loading />
+          : (
+            <form>
+              <input
+                type="text"
+                value={ name }
+                className="form-control input"
+                data-testid="edit-input-name"
+                onChange={ ({ target }) => setName(target.value) }
+              />
+              <input
+                type="email"
+                value={ email }
+                className="form-control input"
+                data-testid="edit-input-email"
+                onChange={ ({ target }) => setEmail(target.value) }
+              />
+              <input
+                type="text"
+                value={ description }
+                className="form-control input"
+                data-testid="edit-input-description"
+                onChange={ ({ target }) => setDescription(target.value) }
+              />
+              <label className="imageInput" htmlFor="imageInput" tabIndex="0">
                 <input
-                  type="text"
-                  name="name"
-                  value={ name }
-                  className="form-control input"
-                  data-testid="edit-input-name"
-                  onChange={ (e) => this.onInputChange(e) }
+                  id="imageInput"
+                  type="file"
+                  accept="image/png"
+                  className="imageInput"
+                  data-testid="edit-input-image"
+                  onChange={ ({ target }) => onInputImage(target.files) }
                 />
-                <input
-                  type="email"
-                  name="email"
-                  value={ email }
-                  className="form-control input"
-                  data-testid="edit-input-email"
-                  onChange={ (e) => this.onInputChange(e) }
-                />
-                <input
-                  type="text"
-                  name="description"
-                  value={ description }
-                  className="form-control input"
-                  data-testid="edit-input-description"
-                  onChange={ (e) => this.onInputChange(e) }
-                />
-                <label className="imageInput" htmlFor="imageInput" tabIndex="0">
-                  <input
-                    id="imageInput"
-                    type="file"
-                    accept="image/png"
-                    name="image"
-                    value={ image }
-                    className="imageInput"
-                    data-testid="edit-input-image"
-                    onChange={ (e) => this.onInputImage(e.target.files) }
-                  />
-                  <span className="image input"> Choose an image</span>
-                  <img src={ image } alt="" />
-                </label>
-                <button
-                  type="button"
-                  className="btn btn-success submit mt-2"
-                  data-testid="edit-button-save"
-                  disabled={ isSaveButtonDisabled }
-                  onClick={ this.handleClickSave }
-                >
-                  Editar perfil
-                </button>
-              </form>
-            )}
-        </div>
-      </div>
-    );
-  }
+                <span className="image input"> Choose an image</span>
+                <img src={ image } alt={ image } />
+              </label>
+              <button
+                type="button"
+                className="btn btn-success submit mt-2"
+                data-testid="edit-button-save"
+                disabled={ isDisabled }
+                onClick={ handleClickSave }
+              >
+                Editar perfil
+              </button>
+            </form>
+          )}
+      </ProfileEditContainer>
+    </div>
+  );
 }
 
 const ProfileEditContainer = styled.div`
