@@ -13,7 +13,6 @@ const Login = () => {
   useEffect(() => {
     const SEIS = 6;
     const inputEmail = /^([a-z\d-]+)@([a-z\d-]+)\.com$/;
-    console.log('disabled', isDisabled);
     if (inputEmail.test(email) && password.length >= SEIS) {
       setIsDisabled(false);
     } else {
