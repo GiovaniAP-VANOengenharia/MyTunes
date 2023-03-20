@@ -24,8 +24,8 @@ const Login = () => {
     history.push('/loading');
     await createUser({ email });
     history.push('/search');
-  }
-  
+  };
+
   return (
     <LoginContainer data-testid="page-login">
       <LoginForm>
@@ -62,7 +62,7 @@ const Login = () => {
       </LoginForm>
     </LoginContainer>
   );
-}
+};
 
 const LoginContainer = styled.div`
   display: flex;

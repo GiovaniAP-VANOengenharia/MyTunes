@@ -7,10 +7,10 @@ const Header = () => {
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState('');
   const [userImg, setUserImg] = useState('');
-  
+
   useEffect(() => {
     setLoading(true);
-    const getUserInfo = async() => {
+    const getUserInfo = async () => {
       const userInfo = await getUser();
       setUserName(!userInfo.name ? userInfo.email : userInfo.name);
       setUserImg(userInfo.image);
@@ -36,6 +36,6 @@ const Header = () => {
       }
     </header>
   );
-}
+};
 
 export default Header;

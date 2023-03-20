@@ -17,14 +17,14 @@ const ProfileEdit = () => {
 
   useEffect(() => {
     setLoading(true);
-    const getUserData = async() => {
+    const getUserData = async () => {
       const dataUser = await getUser();
       setName(dataUser.name);
       setEmail(dataUser.email);
       setDescription(dataUser.description);
       setImage(dataUser.image);
       setLoading(false);
-    }
+    };
     getUserData();
   }, []);
 
@@ -40,7 +40,7 @@ const ProfileEdit = () => {
 
     if (file) {
       fileReader = new FileReader();
-      fileReader.onload = (file) => {
+      fileReader.onload = () => {
         if (file && !isCancel) setImage(file);
       };
       fileReader.readAsDataURL(file);
@@ -52,7 +52,7 @@ const ProfileEdit = () => {
         fileReader.abort();
       }
     };
-  }
+  };
 
   const handleClickSave = async () => {
     const profileEdit = {
@@ -63,7 +63,7 @@ const ProfileEdit = () => {
     };
     await updateUser(profileEdit);
     history.push('/profile');
-  }
+  };
 
   return (
     <div data-testid="page-profile-edit">
@@ -95,7 +95,7 @@ const ProfileEdit = () => {
                 data-testid="edit-input-description"
                 onChange={ ({ target }) => setDescription(target.value) }
               />
-              <label className="imageInput" htmlFor="imageInput" tabIndex="0">
+              <label className="imageInput" htmlFor="imageInput">
                 <input
                   id="imageInput"
                   type="file"
@@ -121,7 +121,7 @@ const ProfileEdit = () => {
       </ProfileEditContainer>
     </div>
   );
-}
+};
 
 const ProfileEditContainer = styled.div`
   display: flex;
@@ -158,7 +158,6 @@ const ProfileEditContainer = styled.div`
     transition: color 300ms ease-in-out , background 300ms ease-in-out;
   }
 `;
-
 
 ProfileEdit.propTypes = {
   history: PropTypes.shape({

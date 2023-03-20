@@ -23,7 +23,7 @@ const Favorites = () => {
     };
     getFavorited();
   }, []);
-  
+
   return (
     <div data-testid="page-favorites">
       <Header />
@@ -39,6 +39,6 @@ const Favorites = () => {
       )))}
     </div>
   );
-}
+};
 
 export default Favorites;

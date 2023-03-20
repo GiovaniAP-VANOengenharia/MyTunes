@@ -42,7 +42,7 @@ const Album = () => {
       ))}
     </div>
   );
-}
+};
 
 Album.propTypes = {
   match: PropTypes.shape({

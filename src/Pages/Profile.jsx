@@ -14,7 +14,7 @@ const Profile = () => {
       const userData = await getUser();
       setDataUser(userData);
       setLoading(false);
-    }
+    };
     getUserData();
   }, []);
 
@@ -48,6 +48,6 @@ const Profile = () => {
       </div>
     </>
   );
-}
+};
 
 export default Profile;

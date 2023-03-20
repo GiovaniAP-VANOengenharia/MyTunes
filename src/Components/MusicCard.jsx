@@ -16,23 +16,22 @@ const MusicCard = (props) => {
       return false;
     });
   }, [favoriteIds]);
-  
+
   const handleChange = async (target) => {
     if (target.checked) {
       setLoading(true);
       setLiked(true);
       setFavoriteIds([...favoriteIds, track.trackId]);
       await addSong(track);
-    }
-    else {
+    } else {
       setLoading(true);
       setLiked(false);
       setFavoriteIds(() => favoriteIds.filter((musicId) => musicId !== track.trackId));
       await removeSong(track);
     }
     setLoading(false);
-  }
-    
+  };
+
   return (
     <div key={ track.trackId }>
       {
@@ -61,7 +60,7 @@ const MusicCard = (props) => {
       ;
     </div>
   );
-}
+};
 
 MusicCard.propTypes = {
   track: PropTypes.shape({

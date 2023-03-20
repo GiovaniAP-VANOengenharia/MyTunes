@@ -25,7 +25,7 @@ const Search = () => {
     setLoading(false);
     setResultList(result);
     setSearching(true);
-  }
+  };
 
   return (
     <div data-testid="page-search">
@@ -78,6 +78,6 @@ const Search = () => {
       </form>
     </div>
   );
-}
+};
 
 export default Search;
