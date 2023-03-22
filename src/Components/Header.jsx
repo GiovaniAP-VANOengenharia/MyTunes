@@ -74,7 +74,11 @@ const Header = () => {
                   </button>
                 </Link>
                 <Link to="/">
-                  <button className="header-btn" type="button">
+                  <button
+                    className="header-btn"
+                    type="button"
+                    onClick={ localStorage.removeItem('user') }
+                  >
                     Sair
                   </button>
                 </Link>

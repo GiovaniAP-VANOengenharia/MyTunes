@@ -15,7 +15,9 @@ const MusicCard = (props) => {
 
   useEffect(() => {
     setLoading(() => {
-      setLiked(() => favoriteIds.some((musicId) => musicId === track.trackId));
+      const favoriteTest = favoriteIds.some((musicId) => musicId === track.trackId);
+      setLiked(favoriteTest);
+      setCkt(favoriteTest ? 'liked' : 'unliked');
       return false;
     });
   }, [favoriteIds]);
