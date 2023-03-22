@@ -7,10 +7,11 @@ import like from '../images/like.png';
 import { addSong, removeSong } from '../services/favoriteSongsAPI';
 
 const MusicCard = (props) => {
-  const { track } = props;
+  const { track, pageFav } = props;
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
   const [ckt, setCkt] = useState('unliked');
+  const [className, setClass] = useState('music_card-true');
   const { favoriteIds, setFavoriteIds } = useContext(MyContext);
 
   useEffect(() => {
@@ -39,14 +40,19 @@ const MusicCard = (props) => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (pageFav) setClass('music_card-true');
+    else setClass('music_card-false');
+  }, [pageFav]);
+
   return (
     <MusicCardContainer key={ track.trackId }>
       {
         loading ? <Loading />
           : (
-            <div className="music_card">
+            <div className={ className }>
               <div className="music-data">
-                <span className="music-name">{ track.trackName }</span>
+                <p className="music-name">{ track.trackName }</p>
                 <audio
                   className="track"
                   data-testid="audio-component"
@@ -84,12 +90,17 @@ const MusicCard = (props) => {
 const MusicCardContainer = styled.div`
   display: flex;
   width: 420px;
-  .music_card {
+  .music_card-true {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .music_card-false {
     display: flex;
     flex-direction: row;
     align-items: center;
     border-radius: 5px;
-    margin: 10px;
+    margin: 5px 0;
   }
   .track {
     width: 300px;
@@ -109,7 +120,10 @@ const MusicCardContainer = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin: 10px;
+    margin: 0px;
+    input {
+      margin: 0;
+    }
   }
   .liked {
     position: relative;
@@ -139,6 +153,7 @@ MusicCard.propTypes = {
     trackName: PropTypes.string.isRequired,
     previewUrl: PropTypes.string.isRequired,
   }).isRequired,
+  pageFav: PropTypes.bool.isRequired,
 };
 
 export default MusicCard;

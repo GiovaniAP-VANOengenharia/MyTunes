@@ -103,6 +103,7 @@ const SearchContainer = styled.div`
   .bg {
     position: fixed;
     top: 100px;
+    opacity: 30%;
     z-index: 0;
   }
   h1 {

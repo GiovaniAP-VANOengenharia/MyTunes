@@ -7,7 +7,7 @@ export default createGlobalStyle`
     .login {
       color: ${(props) => props.theme.fontColor};;
     }
-    span {
+    span, p {
       color: ${(props) => props.theme.fontColor};;
     }
     h1 {
@@ -31,7 +31,10 @@ export default createGlobalStyle`
     .header-btn {
       color: ${(props) => props.theme.fontColor};;
     }
-    .music_card {
+    .music_card-false {
+      border: solid 1px ${(props) => props.theme.fontColor};
+    }
+    .favorite {
       border: solid 1px ${(props) => props.theme.fontColor};
     }
   }

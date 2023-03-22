@@ -6,5 +6,6 @@ export const lightTheme = {
 
 export const darkTheme = {
   body: 'rgb(15, 15, 15)',
+  headerBorder: 'rgb(150, 150, 150)',
   fontColor: '#fff',
 };

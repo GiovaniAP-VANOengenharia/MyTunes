@@ -15,10 +15,12 @@ const Album = () => {
   const [collectionImg, setCollectionImg] = useState('');
   const [artistName, setArtistName] = useState('');
   const [musicsList, setMusicsList] = useState([]);
+  const [pageFav, setPageFav] = useState(false);
   const { favoriteIds, setFavoriteIds, theme } = useContext(MyContext);
   const { id } = useParams();
 
   useEffect(() => {
+    setPageFav(false);
     const getTrack = async (musicId) => {
       const result = await getMusics(musicId);
       setCollectionImg(result[0].artworkUrl100);
@@ -48,7 +50,7 @@ const Album = () => {
         </div>
         <div className="music-card">
           {musicsList.map((music, i) => (
-            <MusicCard key={ i } track={ music } />
+            <MusicCard key={ i } track={ music } pageFav={ pageFav } />
           ))}
         </div>
       </AlbumContainer>

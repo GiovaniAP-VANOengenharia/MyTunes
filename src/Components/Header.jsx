@@ -17,7 +17,6 @@ const Header = () => {
   useEffect(() => {
     setLoading(true);
     const themeLocal = localStorage.getItem('theme');
-    console.log(themeLocal);
     if (themeLocal === 'dark') setDarkMode(sun);
     else setDarkMode(moon);
     const getUserInfo = async () => {
@@ -52,8 +51,10 @@ const Header = () => {
         loading ? <Loading />
           : (
             <HeaderDiv className="header-div">
-              <img className="user-img" src={ userImg } alt={ userImg } />
-              <span id="user-name" data-testid="header-user-name">{ userName }</span>
+              <div className="header-subdiv">
+                <img className="user-img" src={ userImg } alt={ userImg } />
+                <span id="user-name" data-testid="header-user-name">{ userName }</span>
+              </div>
               <div className="header-buttons">
                 <button className="btn" type="button" onClick={ darkModeHandle }>
                   <img className="button" src={ darkMode } alt="" />
@@ -77,7 +78,7 @@ const Header = () => {
                   <button
                     className="header-btn"
                     type="button"
-                    onClick={ localStorage.removeItem('user') }
+                    onClick={ () => localStorage.removeItem('user') }
                   >
                     Sair
                   </button>
@@ -93,6 +94,7 @@ const Header = () => {
 const HeaderContainer = styled.div`
   width: 100%;
   height: 100px;
+  margin-bottom: 10px;
 `;
 
 const HeaderDiv = styled.div`
@@ -102,6 +104,18 @@ const HeaderDiv = styled.div`
   height: 100px;
   #user-name {
     margin: 10px;
+  }
+  .header-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  .header-subdiv {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
   }
   .user-img {
     display: flex;
