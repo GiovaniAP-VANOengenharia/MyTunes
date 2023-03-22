@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
+import styled from 'styled-components';
 import MyContext from '../Context/MyContext';
 import Loading from '../Pages/Loading';
 import { addSong, removeSong } from '../services/favoriteSongsAPI';
@@ -33,7 +34,7 @@ const MusicCard = (props) => {
   };
 
   return (
-    <div key={ track.trackId }>
+    <MusicCardContainer key={ track.trackId }>
       {
         loading ? <Loading />
           : (
@@ -58,9 +59,34 @@ const MusicCard = (props) => {
           )
       }
       ;
-    </div>
+    </MusicCardContainer>
   );
 };
+
+const MusicCardContainer = styled.div`
+  .card-link {
+    text-decoration: none;
+  }
+  .card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 350px;
+    border-radius: 5px;
+    margin: 5px 0;
+  }
+  .collection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    width: 100%;
+  }
+  .span {
+    margin: 5px;
+  }
+`;
 
 MusicCard.propTypes = {
   track: PropTypes.shape({

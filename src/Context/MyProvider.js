@@ -9,7 +9,7 @@ export default function Provider({ children }) {
   useEffect(() => {
     const userTheme = localStorage.getItem('theme');
     if (userTheme) setTheme(userTheme);
-  }, []);
+  }, [theme]);
 
   const providerValue = useMemo(() => (
     { favoriteIds, setFavoriteIds, theme, setTheme }), [favoriteIds, theme]);

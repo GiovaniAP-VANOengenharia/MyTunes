@@ -35,11 +35,12 @@ const Header = () => {
   }, [theme]);
 
   const darkModeHandle = () => {
-    localStorage.setItem('theme', theme);
     if (theme === 'dark') {
+      localStorage.setItem('theme', 'light');
       setDarkMode(moon);
       setTheme('light');
     } else {
+      localStorage.setItem('theme', 'dark');
       setDarkMode(sun);
       setTheme('dark');
     }
@@ -52,7 +53,7 @@ const Header = () => {
           : (
             <HeaderDiv className="header-div">
               <img className="user-img" src={ userImg } alt={ userImg } />
-              <span data-testid="header-user-name">{ userName }</span>
+              <span id="user-name" data-testid="header-user-name">{ userName }</span>
               <div className="header-buttons">
                 <button className="btn" type="button" onClick={ darkModeHandle }>
                   <img className="button" src={ darkMode } alt="" />
@@ -95,6 +96,9 @@ const HeaderDiv = styled.div`
   align-items: center;
   width: 100%;
   height: 100px;
+  #user-name {
+    margin: 10px;
+  }
   .user-img {
     display: flex;
     align-self: center;

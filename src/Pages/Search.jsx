@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import Header from '../Components/Header';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
 import LightMode02 from '../images/LightMode02.png';
 import DarkMode02 from '../images/DarkMode02.png';
 import Loading from './Loading';
+import AlbumCard from '../Components/AlbumCard';
 import { lightTheme, darkTheme } from '../theme/darkMode';
-import MyContext from '../Context/MyContext';
 import GlobalStyle from '../theme/GlobalStyle';
 
 const Search = () => {
@@ -19,18 +18,21 @@ const Search = () => {
   const [searching, setSearching] = useState(false);
   const [className, setClass] = useState('search-form div');
   const [backGround, setBackGround] = useState('');
-  const { theme } = useContext(MyContext);
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    const themeLocal = localStorage.getItem('theme');
+    setTheme(themeLocal);
+    if (themeLocal === 'light') {
+      setBackGround(LightMode02);
+    } else setBackGround(DarkMode02);
+  }, []);
 
   useEffect(() => {
     const DIGITOS = 2;
     if (inputSearch.length >= DIGITOS) setIsDisabled(false);
     else { setIsDisabled(true); }
   }, [inputSearch]);
-
-  useEffect(() => {
-    if (theme === 'light') setBackGround(LightMode02);
-    else setBackGround(DarkMode02);
-  }, [theme]);
 
   const searchButtonClick = async () => {
     setArtistName(inputSearch);
@@ -78,24 +80,7 @@ const Search = () => {
               resultList.length !== 0 ? (
                 <div className="albums">
                   {resultList.map((artist) => (
-                    <div key={ artist.collectionId }>
-                      <Link
-                        className="card-link"
-                        to={ `/album/${artist.collectionId}` }
-                        data-testid={ `link-to-album-${artist.collectionId}` }
-                      >
-                        <div className="card">
-                          <img
-                            src={ artist.artworkUrl100 }
-                            alt={ artist.collectionName }
-                          />
-                          <div className="collection">
-                            <p className="span">{ artist.collectionName }</p>
-                            <p className="span">{ artist.artistName }</p>
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
+                    <AlbumCard key={ artist.collectionId } artist={ artist } />
                   ))}
                 </div>
               ) : 'Nenhum álbum foi encontrado'
@@ -161,28 +146,6 @@ const SearchContainer = styled.div`
     justify-content: space-between;
     flex-wrap: wrap;
     width: 100%;
-  }
-  .card-link {
-    text-decoration: none;
-  }
-  .card {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 350px;
-    border-radius: 5px;
-    margin: 5px 0;
-  }
-  .collection {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
-    width: 100%;
-  }
-  .span {
-    margin: 5px;
   }
 `;
 
