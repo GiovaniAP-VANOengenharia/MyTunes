@@ -59,6 +59,7 @@ const Album = () => {
 const AlbumContainer = styled.div`
   width: 100%;
   .album-card {
+    margin: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -73,10 +74,10 @@ const AlbumContainer = styled.div`
   .span {
     margin: 5px;
   }
-  .music-cart {
+  .music-card {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-wrap: wrap;
     width: 100%;
   }

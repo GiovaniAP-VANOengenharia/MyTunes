@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 import { createUser } from '../services/userAPI';
@@ -7,15 +7,15 @@ import { lightTheme, darkTheme } from '../theme/darkMode';
 import LightMode01 from '../images/LightMode01.png';
 import DarkMode01 from '../images/DarkMode01.png';
 import GlobalStyle from '../theme/GlobalStyle';
+import MyContext from '../Context/MyContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isDisabled, setIsDisabled] = useState(true);
   const [backGround, setBackGround] = useState('');
+  const { theme, setTheme } = useContext(MyContext);
   const history = useHistory();
-
-  const theme = localStorage.getItem('theme');
 
   useEffect(() => {
     const SEIS = 6;
@@ -28,9 +28,13 @@ const Login = () => {
   }, [email, password]);
 
   useEffect(() => {
-    if (theme === 'dark') setBackGround(DarkMode01);
-    else {
+    const themeLocal = localStorage.getItem('theme');
+    if (themeLocal === 'dark') {
+      setBackGround(DarkMode01);
+      setTheme(themeLocal);
+    } else {
       setBackGround(LightMode01);
+      setTheme('light');
       localStorage.setItem('theme', 'light');
     }
   }, []);

@@ -31,5 +31,8 @@ export default createGlobalStyle`
     .header-btn {
       color: ${(props) => props.theme.fontColor};;
     }
+    .music_card {
+      border: solid 1px ${(props) => props.theme.fontColor};
+    }
   }
 `;
