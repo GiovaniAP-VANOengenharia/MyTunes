@@ -98,6 +98,7 @@ const LoginContainer = styled.div`
     position: absolute;
     z-index: -1;
     top: 100px;
+    opacity: 20%;
   }
 `;
 

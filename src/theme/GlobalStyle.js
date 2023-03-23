@@ -16,7 +16,7 @@ export default createGlobalStyle`
     .search-div{
       /* background-color: ${(props) => props.theme.body}; */
     }
-    #button {
+    .button {
       &:disabled {
         color: ${(props) => props.theme.fontColor};
     }

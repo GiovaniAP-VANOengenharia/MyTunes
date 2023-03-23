@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import Header from '../Components/Header';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
@@ -8,6 +8,7 @@ import Loading from './Loading';
 import AlbumCard from '../Components/AlbumCard';
 import { lightTheme, darkTheme } from '../theme/darkMode';
 import GlobalStyle from '../theme/GlobalStyle';
+import MyContext from '../Context/MyContext';
 
 const Search = () => {
   const [inputSearch, setInputSearch] = useState('');
@@ -18,7 +19,7 @@ const Search = () => {
   const [searching, setSearching] = useState(false);
   const [className, setClass] = useState('search-form div');
   const [backGround, setBackGround] = useState('');
-  const [theme, setTheme] = useState('light');
+  const { theme, setTheme } = useContext(MyContext);
 
   useEffect(() => {
     const themeLocal = localStorage.getItem('theme');
@@ -26,7 +27,7 @@ const Search = () => {
     if (themeLocal === 'light') {
       setBackGround(LightMode02);
     } else setBackGround(DarkMode02);
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     const DIGITOS = 2;
@@ -62,6 +63,7 @@ const Search = () => {
             <button
               type="button"
               id="button"
+              className="button"
               data-testid="search-artist-button"
               disabled={ isDisabled }
               onClick={ searchButtonClick }
@@ -116,7 +118,7 @@ const SearchContainer = styled.div`
     height: 25px;
     width: 500px;
   }
-  #button {
+  .button {
     margin: 10px;
     height: 25px;
     width: 400px;

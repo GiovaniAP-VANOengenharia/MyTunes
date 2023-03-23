@@ -24,7 +24,7 @@ const Favorites = () => {
     if (themeLocal === 'light') {
       setBackGround(LightMode02);
     } else setBackGround(DarkMode02);
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     setLoading(true);
@@ -70,8 +70,9 @@ const FavoriteContainer = styled.div`
   .bg {
     position: fixed;
     top: 100px;
+    left: 0px;
     opacity: 30%;
-    z-index: 0;
+    z-index: -1;
   }
   .favorite {
     margin: 10px 0;

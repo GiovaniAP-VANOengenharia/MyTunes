@@ -1,19 +1,33 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import styled, { ThemeProvider } from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
 import Header from '../Components/Header';
 import { getUser, updateUser } from '../services/userAPI';
+import LightMode02 from '../images/LightMode02.png';
+import DarkMode02 from '../images/DarkMode02.png';
+import GlobalStyle from '../theme/GlobalStyle';
+import { lightTheme, darkTheme } from '../theme/darkMode';
 import Loading from './Loading';
+import MyContext from '../Context/MyContext';
 
 const ProfileEdit = () => {
   const [loading, setLoading] = useState(true);
-  const [isDisabled, setIsDisabled] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState('');
+  const [backGround, setBackGround] = useState('');
+  const { theme, setTheme } = useContext(MyContext);
   const history = useHistory();
+
+  useEffect(() => {
+    const themeLocal = localStorage.getItem('theme');
+    setTheme(themeLocal);
+    if (themeLocal === 'light') {
+      setBackGround(LightMode02);
+    } else setBackGround(DarkMode02);
+  }, [theme]);
 
   useEffect(() => {
     setLoading(true);
@@ -28,30 +42,10 @@ const ProfileEdit = () => {
     getUserData();
   }, []);
 
-  useEffect(() => {
-    const arrayInputs = [name, email, description, image];
-    setIsDisabled(arrayInputs.some((input) => input.length === 0));
-  }, [name, email, description, image]);
-
   const onInputImage = async (file) => {
-    setImage(file[0].name);
-    let fileReader;
-    let isCancel = false;
-
     if (file) {
-      fileReader = new FileReader();
-      fileReader.onload = () => {
-        if (file && !isCancel) setImage(file);
-      };
-      fileReader.readAsDataURL(file);
+      setImage(file[0].name);
     }
-
-    return () => {
-      isCancel = true;
-      if (fileReader && fileReader.readyState === 1) {
-        fileReader.abort();
-      }
-    };
   };
 
   const handleClickSave = async () => {
@@ -66,35 +60,16 @@ const ProfileEdit = () => {
   };
 
   return (
-    <div data-testid="page-profile-edit">
-      <Header />
+    <ThemeProvider theme={ theme === 'light' ? lightTheme : darkTheme }>
+      <GlobalStyle />
       <ProfileEditContainer data-testid="page-profile-edit">
-        Profile
-        <br />
+        <Header />
+        <img src={ backGround } alt="" className="bg" />
+        <h1>Profile</h1>
+
         {loading ? <Loading />
           : (
             <form>
-              <input
-                type="text"
-                value={ name }
-                className="form-control input"
-                data-testid="edit-input-name"
-                onChange={ ({ target }) => setName(target.value) }
-              />
-              <input
-                type="email"
-                value={ email }
-                className="form-control input"
-                data-testid="edit-input-email"
-                onChange={ ({ target }) => setEmail(target.value) }
-              />
-              <input
-                type="text"
-                value={ description }
-                className="form-control input"
-                data-testid="edit-input-description"
-                onChange={ ({ target }) => setDescription(target.value) }
-              />
               <label className="imageInput" htmlFor="imageInput">
                 <input
                   id="imageInput"
@@ -107,28 +82,116 @@ const ProfileEdit = () => {
                 <span className="imageInput"> Choose an image</span>
                 <img src={ image } alt={ image } />
               </label>
-              <button
-                type="button"
-                className="btn btn-success submit mt-2"
-                data-testid="edit-button-save"
-                disabled={ isDisabled }
-                onClick={ handleClickSave }
-              >
-                Editar perfil
-              </button>
+              <div className="inputs">
+                <label htmlFor="name">
+                  <span>Nome</span>
+                  <input
+                    type="text"
+                    id="name"
+                    value={ name }
+                    className="form-control input"
+                    data-testid="edit-input-name"
+                    onChange={ ({ target }) => setName(target.value) }
+                  />
+                </label>
+                <label htmlFor="email">
+                  <span>Email</span>
+                  <input
+                    type="email"
+                    id="email"
+                    value={ email }
+                    className="form-control input"
+                    data-testid="edit-input-email"
+                    onChange={ ({ target }) => setEmail(target.value) }
+                  />
+                </label>
+                <label htmlFor="descripton">
+                  <span>Description</span>
+                  <textarea
+                    type="text-area"
+                    id="descripton"
+                    value={ description }
+                    className="form-control input area"
+                    data-testid="edit-input-description"
+                    onChange={ ({ target }) => setDescription(target.value) }
+                  />
+                </label>
+                <button
+                  type="button"
+                  className="btn btn-success submit mt-2"
+                  data-testid="edit-button-save"
+                  onClick={ handleClickSave }
+                >
+                  Editar perfil
+                </button>
+              </div>
             </form>
           )}
       </ProfileEditContainer>
-    </div>
+    </ThemeProvider>
   );
 };
 
 const ProfileEditContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5%;
+  flex-wrap: wrap;
+  width: 100%;
+
+  .bg {
+    position: fixed;
+    top: 100px;
+    left: 0;
+    opacity: 30%;
+    z-index: -1;
+  }
+
+  form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+  }
+
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    label {
+      display: flex;
+      flex-direction: column;
+      width: 90%;
+      margin: 5px 0;
+      gap: 5px;
+      input {
+        width: 100%;
+        border-radius: 5px;
+      }
+      textarea {
+        width: 100%;
+        height: 50px;
+        border-radius: 5px;
+      }
+    }
+    button {
+      width: 90%;
+      height: 25px;
+      border-radius: 5px;
+      margin: 5px 0;
+      color: white;
+      background-color: #036b5352;
+      border-radius: 3px;
+      border: 1px solid #036B52;
+    }
+  }
+
+  .form-control {
+    height: 25px;
+    width: 80%;
+  }
 
   #imageInput {
     display: none;
@@ -141,10 +204,14 @@ const ProfileEditContainer = styled.div`
     color: rgb(100, 100, 100);
     cursor: pointer;
     display: flex;
-    height: 200px;
+    height: 250px;
     justify-content: center;
     transition: color 300ms ease-in-out , background 300ms ease-in-out;
-    width: 200px;
+    width: 250px;
+    img {
+      position: absolute;
+      width: 100%;
+    }
   }
 
   .imageInput:hover {

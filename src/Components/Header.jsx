@@ -57,7 +57,7 @@ const Header = () => {
               </div>
               <div className="header-buttons">
                 <button className="btn" type="button" onClick={ darkModeHandle }>
-                  <img className="button" src={ darkMode } alt="" />
+                  <img className="button-img" src={ darkMode } alt="" />
                 </button>
                 <Link to="/search" data-testid="link-to-search">
                   <button className="header-btn" type="button">
@@ -127,7 +127,7 @@ const HeaderDiv = styled.div`
     background: transparent;
     margin: 5px;
   }
-  .button {
+  .button-img {
     width: 28px;
     height: 28px;
     top: 0%;
