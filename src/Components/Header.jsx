@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Loading from '../Pages/Loading';
 import { getUser } from '../services/userAPI';
+import lUnknownAvatar from '../images/light_unknown_avatar.png';
+import dUnknownAvatar from '../images/dark_unknown_avatar.png';
 import moon from '../images/Moon.png';
 import sun from '../images/Sun.png';
 import MyContext from '../Context/MyContext';
@@ -10,19 +12,23 @@ import MyContext from '../Context/MyContext';
 const Header = () => {
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState('');
-  const [userImg, setUserImg] = useState('');
+  const [userImg, setUserImg] = useState(lUnknownAvatar);
   const [darkMode, setDarkMode] = useState('');
   const { theme, setTheme } = useContext(MyContext);
 
   useEffect(() => {
     setLoading(true);
     const themeLocal = localStorage.getItem('theme');
-    if (themeLocal === 'dark') setDarkMode(sun);
-    else setDarkMode(moon);
+    if (themeLocal === 'dark') {
+      setDarkMode(sun);
+      setUserImg(dUnknownAvatar);
+    } else {
+      setDarkMode(moon);
+      setUserImg(lUnknownAvatar);
+    }
     const getUserInfo = async () => {
       const userInfo = await getUser();
       setUserName(!userInfo.name ? userInfo.email : userInfo.name);
-      setUserImg(userInfo.image);
       setLoading(false);
     };
     getUserInfo();
@@ -37,10 +43,12 @@ const Header = () => {
     if (theme === 'dark') {
       localStorage.setItem('theme', 'light');
       setDarkMode(moon);
+      setUserImg(lUnknownAvatar);
       setTheme('light');
     } else {
       localStorage.setItem('theme', 'dark');
       setDarkMode(sun);
+      setUserImg(dUnknownAvatar);
       setTheme('dark');
     }
   };

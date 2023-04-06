@@ -3,9 +3,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 import { createUser } from '../services/userAPI';
-import { lightTheme, darkTheme } from '../theme/darkMode';
 import LightMode01 from '../images/LightMode01.png';
 import DarkMode01 from '../images/DarkMode01.png';
+import { lightTheme, darkTheme } from '../theme/darkMode';
 import GlobalStyle from '../theme/GlobalStyle';
 import MyContext from '../Context/MyContext';
 
